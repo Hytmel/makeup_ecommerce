@@ -25,7 +25,7 @@ export default function AccountPage() {
     }
 
     if (user) {
-      setEditForm({ name: user.name, email: user.email })
+      setEditForm({ name: user.displayName || "", email: user.email || "" })
     }
 
     // Load cart and favorites
@@ -37,7 +37,8 @@ export default function AccountPage() {
   }, [user, isLoading, router])
 
   const handleSaveProfile = () => {
-    updateProfile(editForm)
+    // Persist only displayName via Firebase Auth
+    updateProfile({ displayName: editForm.name })
     setIsEditing(false)
   }
 
@@ -131,7 +132,7 @@ export default function AccountPage() {
                         className="bg-card border-border"
                       />
                     ) : (
-                      <p className="text-muted-foreground">{user.name}</p>
+                      <p className="text-muted-foreground">{user.displayName || user.email}</p>
                     )}
                   </div>
                   <div className="space-y-2">
@@ -150,7 +151,7 @@ export default function AccountPage() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Member Since</label>
                   <p className="text-muted-foreground">
-                    {new Date(user.joinDate).toLocaleDateString("en-US", {
+                    {new Date(user.metadata?.creationTime || Date.now()).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",

@@ -1,6 +1,14 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect } from "react"
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth"
+import { auth } from "../lib/firebase"
 
 const AuthContext = createContext()
 
@@ -17,66 +25,54 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Load user from localStorage on mount
-    const savedUser = localStorage.getItem("aurelia-user")
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
-    }
-    setIsLoading(false)
+    const unsub = onAuthStateChanged(auth, (fbUser) => {
+      setUser(fbUser)
+      setIsLoading(false)
+    })
+    return () => unsub()
   }, [])
 
   const login = async (email, password) => {
-    // Mock authentication - in real app, this would call an API
-    if (email && password) {
-      const userData = {
-        id: Date.now(),
-        email,
-        name: email.split("@")[0],
-        joinDate: new Date().toISOString(),
-        orders: [],
-      }
-      setUser(userData)
-      localStorage.setItem("aurelia-user", JSON.stringify(userData))
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
       return { success: true }
+    } catch (err) {
+      return { success: false, error: err.message }
     }
-    return { success: false, error: "Invalid credentials" }
   }
 
   const register = async (name, email, password) => {
-    // Mock registration - in real app, this would call an API
-    if (name && email && password) {
-      const userData = {
-        id: Date.now(),
-        email,
-        name,
-        joinDate: new Date().toISOString(),
-        orders: [],
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password)
+      if (name) {
+        await updateProfile(cred.user, { displayName: name })
       }
-      setUser(userData)
-      localStorage.setItem("aurelia-user", JSON.stringify(userData))
       return { success: true }
+    } catch (err) {
+      return { success: false, error: err.message }
     }
-    return { success: false, error: "Please fill all fields" }
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem("aurelia-user")
-  }
-
-  const updateProfile = (updates) => {
-    const updatedUser = { ...user, ...updates }
-    setUser(updatedUser)
-    localStorage.setItem("aurelia-user", JSON.stringify(updatedUser))
-  }
-
-  const addOrder = (order) => {
-    const updatedUser = {
-      ...user,
-      orders: [order, ...user.orders],
+  const logout = async () => {
+    try {
+      await signOut(auth)
+    } catch (_) {
+      // ignore
     }
-    setUser(updatedUser)
-    localStorage.setItem("aurelia-user", JSON.stringify(updatedUser))
+  }
+
+  const updateProfileLocal = async (updates) => {
+    // Optional: you can expand to persist additional profile fields in Firestore users/{uid}
+    try {
+      if (auth.currentUser && updates.displayName) {
+        await updateProfile(auth.currentUser, { displayName: updates.displayName })
+        setUser({ ...auth.currentUser })
+      }
+    } catch (_) {}
+  }
+
+  const addOrder = (_order) => {
+    // Placeholder for future: write order to Firestore
   }
 
   const value = {
@@ -85,7 +81,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
-    updateProfile,
+    updateProfile: updateProfileLocal,
     addOrder,
   }
 

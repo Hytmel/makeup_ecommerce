@@ -10,7 +10,6 @@ import { collections } from "../../data/collections"
 import { products } from "../../data/products"
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
-import { AuthProvider } from "../../contexts/AuthContext"
 
 function CollectionsContent() {
   const [cartItems, setCartItems] = useState([])
@@ -143,8 +142,6 @@ function CollectionsContent() {
 
 export default function CollectionsPage() {
   return (
-    <AuthProvider>
-      <CollectionsContent />
-    </AuthProvider>
+    <CollectionsContent />
   )
 }

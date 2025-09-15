@@ -9,7 +9,6 @@ import About from "../components/About"
 import Footer from "../components/Footer"
 import Cart from "../components/Cart"
 import Favorites from "../components/Favorites"
-import { AuthProvider } from "../contexts/AuthContext"
 import { Card, CardContent } from "../components/ui/card"
 import { Button } from "../components/ui/button"
 import { ArrowRight, BookOpen } from "lucide-react"
@@ -170,8 +169,6 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <AuthProvider>
-      <HomeContent />
-    </AuthProvider>
+    <HomeContent />
   )
 }
