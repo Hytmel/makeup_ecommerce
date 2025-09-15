@@ -14,12 +14,18 @@ import { Button } from "../components/ui/button"
 import { ArrowRight, BookOpen } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { blogPosts } from "../data/blog"
+import { db } from "../lib/firebase"
+import { collection, getDocs } from "firebase/firestore"
+import { brands as localBrands } from "../data/brands"
+import { Badge } from "../components/ui/badge"
 
 function HomeContent() {
   const [cartItems, setCartItems] = useState([])
   const [favorites, setFavorites] = useState([])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false)
+  const [brands, setBrands] = useState([])
+  const [productsByBrand, setProductsByBrand] = useState({})
   const router = useRouter()
 
   // Load data from localStorage on component mount
@@ -44,6 +50,32 @@ function HomeContent() {
   useEffect(() => {
     localStorage.setItem("aurelia-favorites", JSON.stringify(favorites))
   }, [favorites])
+
+  // Load brands (featured) from Firestore with fallback to local
+  useEffect(() => {
+    const loadBrands = async () => {
+      try {
+        const snap = await getDocs(collection(db, "brands"))
+        const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+        if (list.length > 0) {
+          setBrands(list.filter((b) => b.featured))
+          // compute product counts per brand
+          try {
+            const prodSnap = await getDocs(collection(db, "products"))
+            const map = {}
+            prodSnap.forEach((doc) => {
+              const b = doc.data()?.brand
+              if (b) map[b] = (map[b] || 0) + 1
+            })
+            setProductsByBrand(map)
+          } catch (_) {}
+          return
+        }
+      } catch (_) {}
+      setBrands(localBrands.filter((b) => b.featured))
+    }
+    loadBrands()
+  }, [])
 
   const addToCart = (product) => {
     setCartItems((prev) => {
@@ -94,6 +126,78 @@ function HomeContent() {
       <main>
         <Hero />
         <ProductGrid onAddToCart={addToCart} onToggleFavorite={toggleFavorite} favorites={favorites} isCompact />
+
+        {/* Featured Algerian Brands */}
+        {brands.length > 0 && (
+          <section className="py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="relative text-center mb-8">
+                <h2 className="text-4xl font-serif font-bold text-foreground mb-0 text-balance">Featured Algerian Brands</h2>
+                <Button
+                  variant="ghost"
+                  onClick={() => router.push("/brand")}
+                  className="h-auto absolute right-0 top-1/2 -translate-y-1/2"
+                >
+                  View all brands
+                </Button>
+              </div>
+              {(() => {
+                // Ensure we always show 3 cards by supplementing with local brands if needed
+                const existingIds = new Set(brands.map((b) => b.id))
+                const supplemented = [...brands]
+                for (const lb of localBrands) {
+                  if (supplemented.length >= 3) break
+                  if (!existingIds.has(lb.id)) supplemented.push(lb)
+                }
+                const displayBrands = supplemented.slice(0, 3)
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+                    {displayBrands.map((b) => (
+                      <Card
+                        key={b.id}
+                        className="group cursor-pointer hover:shadow-lg transition-all"
+                        onClick={() => router.push(`/brands/${b.id}`)}
+                      >
+                        <CardContent className="p-8">
+                          <div className="flex items-center gap-4">
+                            <div className="h-24 w-24 rounded-xl overflow-hidden bg-secondary/30 flex items-center justify-center">
+                              <img src={b.logo || "/placeholder.svg"} alt={b.name} className="h-full w-full object-cover" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-xl font-semibold text-foreground line-clamp-2">{b.name}</div>
+                              <div className="mt-1 flex items-center gap-2 flex-wrap">
+                                {b.featured && <Badge className="text-xs">Featured</Badge>}
+                                {b.wilaya && <Badge className="text-xs" variant="secondary">{b.wilaya}</Badge>}
+                                {!!(productsByBrand[b.id] || 0) && (
+                                  <Badge className="text-xs" variant="outline">{productsByBrand[b.id]} products</Badge>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          {b.description && (
+                            <p className="text-base text-muted-foreground mt-5 text-pretty line-clamp-2">{b.description}</p>
+                          )}
+                          <div className="mt-4 flex gap-3">
+                            {b.website && (
+                              <a href={b.website} target="_blank" rel="noreferrer" className="text-primary text-sm underline">
+                                Website
+                              </a>
+                            )}
+                            {b.instagram && (
+                              <a href={b.instagram} target="_blank" rel="noreferrer" className="text-primary text-sm underline">
+                                Instagram
+                              </a>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )
+              })()}
+            </div>
+          </section>
+        )}
 
         <section className="py-20 bg-secondary/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
