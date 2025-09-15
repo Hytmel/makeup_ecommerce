@@ -19,8 +19,8 @@ function BrandContent() {
   const router = useRouter()
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("aurelia-cart")
-    const savedFavorites = localStorage.getItem("aurelia-favorites")
+    const savedCart = localStorage.getItem("elixirdz-cart")
+    const savedFavorites = localStorage.getItem("elixirdz-favorites")
 
     if (savedCart) setCartItems(JSON.parse(savedCart))
     if (savedFavorites) setFavorites(JSON.parse(savedFavorites))

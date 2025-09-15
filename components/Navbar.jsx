@@ -34,7 +34,7 @@ export default function Navbar({ cartCount, favoritesCount, onCartOpen, onFavori
                 className="text-2xl font-serif font-bold text-foreground cursor-pointer"
                 onClick={() => router.push("/")}
               >
-                Aurelia
+                Elixir DZ
               </h1>
             </div>
 

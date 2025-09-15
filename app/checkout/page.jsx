@@ -40,8 +40,8 @@ export default function CheckoutPage() {
   const router = useRouter()
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("aurelia-cart")
-    const savedFavorites = localStorage.getItem("aurelia-favorites")
+    const savedCart = localStorage.getItem("elixirdz-cart")
+    const savedFavorites = localStorage.getItem("elixirdz-favorites")
 
     if (savedCart) {
       const cart = JSON.parse(savedCart)
@@ -104,7 +104,7 @@ export default function CheckoutPage() {
       }
 
       // Clear cart
-      localStorage.setItem("aurelia-cart", JSON.stringify([]))
+      localStorage.setItem("elixirdz-cart", JSON.stringify([]))
       setCartItems([])
 
       setIsProcessing(false)

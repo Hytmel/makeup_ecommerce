@@ -61,7 +61,7 @@ export default function RegisterPage() {
         {/* Register Card */}
         <Card className="border-border/50">
           <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-3xl font-serif text-foreground">Join Aurelia</CardTitle>
+            <CardTitle className="text-3xl font-serif text-foreground">Join Elixir DZ</CardTitle>
             <p className="text-muted-foreground">Create your luxury beauty account</p>
           </CardHeader>
           <CardContent>

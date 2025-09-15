@@ -30,8 +30,8 @@ function HomeContent() {
 
   // Load data from localStorage on component mount
   useEffect(() => {
-    const savedCart = localStorage.getItem("aurelia-cart")
-    const savedFavorites = localStorage.getItem("aurelia-favorites")
+    const savedCart = localStorage.getItem("elixirdz-cart")
+    const savedFavorites = localStorage.getItem("elixirdz-favorites")
 
     if (savedCart) {
       setCartItems(JSON.parse(savedCart))
@@ -43,12 +43,12 @@ function HomeContent() {
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem("aurelia-cart", JSON.stringify(cartItems))
+    localStorage.setItem("elixirdz-cart", JSON.stringify(cartItems))
   }, [cartItems])
 
   // Save favorites to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("aurelia-favorites", JSON.stringify(favorites))
+    localStorage.setItem("elixirdz-favorites", JSON.stringify(favorites))
   }, [favorites])
 
   // Load brands (featured) from Firestore with fallback to local

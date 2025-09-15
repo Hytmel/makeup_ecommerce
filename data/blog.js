@@ -69,7 +69,7 @@ export const blogPosts = [
     title: "Color Theory: Choosing the Perfect Lipstick for Your Skin Tone",
     slug: "color-theory-perfect-lipstick",
     excerpt:
-      "Unlock the secrets of color theory to find your most flattering lip shades and discover which Aurelia lipsticks are perfect for you.",
+      "Unlock the secrets of color theory to find your most flattering lip shades and discover which Elixir DZ lipsticks are perfect for you.",
     content: `
       <p>Finding the perfect lipstick shade can transform your entire look. Understanding color theory and how different hues interact with your skin tone is the key to discovering your most flattering shades.</p>
       

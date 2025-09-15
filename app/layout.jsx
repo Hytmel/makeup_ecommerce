@@ -6,8 +6,8 @@ import { AuthProvider } from "../contexts/AuthContext"
 import "./globals.css"
 
 export const metadata = {
-  title: "Aurelia - Luxury Makeup & Beauty",
-  description: "Discover premium makeup and skincare products at Aurelia",
+  title: "Elixir DZ - Algerian Beauty & Cosmetics",
+  description: "Discover authentic Algerian beauty brands and premium cosmetics at Elixir DZ",
   generator: "v0.app",
 }
 

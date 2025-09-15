@@ -4,23 +4,23 @@ import { Card, CardContent } from "./ui/card"
 const features = [
   {
     icon: <Sparkles className="h-8 w-8 text-primary" />,
-    title: "Premium Quality",
-    description: "Carefully crafted formulas using the finest ingredients for exceptional results.",
+    title: "Algerian‑First Curation",
+    description: "Handpicked brands and products tailored for Algerian customers.",
   },
   {
     icon: <Leaf className="h-8 w-8 text-primary" />,
-    title: "Cruelty-Free",
-    description: "100% cruelty-free and ethically sourced. Beauty without compromise.",
+    title: "Halal‑Friendly Options",
+    description: "Highlighting halal‑friendly picks when provided by the brand.",
   },
   {
     icon: <Award className="h-8 w-8 text-primary" />,
-    title: "Award-Winning",
-    description: "Recognized by beauty experts and loved by customers worldwide.",
+    title: "Cash on Delivery (COD)",
+    description: "Convenient COD available in many wilayas with clear delivery fees.",
   },
   {
     icon: <Heart className="h-8 w-8 text-primary" />,
-    title: "Made with Love",
-    description: "Every product is created with passion and attention to detail.",
+    title: "Transparent DZD Pricing",
+    description: "Prices shown in Algerian dinar with no surprises at checkout.",
   },
 ]
 
@@ -32,15 +32,15 @@ export default function About() {
           {/* Left Content */}
           <div className="space-y-6">
             <div className="space-y-4">
-              <h2 className="text-4xl font-serif font-bold text-foreground text-balance">Our Story</h2>
+              <h2 className="text-4xl font-serif font-bold text-foreground text-balance">About Elixir DZ Marketplace</h2>
               <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-                Founded with a vision to celebrate natural beauty, Aurelia represents the perfect fusion of luxury and
-                authenticity. We believe that makeup should enhance, not mask, your unique radiance.
+                We help Algerian shoppers discover trusted local beauty brands with clear DZD pricing and easy delivery.
+                From emerging labels to established names, we curate products that fit Algeria’s needs and routines.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-                Each product in our collection is meticulously crafted using premium ingredients and innovative
-                formulas. From our signature rose gold packaging to our commitment to cruelty-free practices, every
-                detail reflects our dedication to excellence.
+                Our focus is simple: verified sellers, halal‑friendly selections where applicable, cash‑on‑delivery in
+                many wilayas, and great support. Shop confidently with real photos, transparent prices, and a smooth
+                experience.
               </p>
             </div>
           </div>
@@ -48,8 +48,8 @@ export default function About() {
           {/* Right Content - Image */}
           <div className="relative">
             <img
-              src="/placeholder.svg?height=500&width=600"
-              alt="Aurelia makeup collection"
+              src="/luxury-foundation-bottle-beige-pump-minimal-backgr.jpg"
+              alt="Algerian beauty marketplace"
               className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
             />
           </div>

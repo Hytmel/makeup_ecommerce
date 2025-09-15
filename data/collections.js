@@ -2,7 +2,7 @@ export const collections = [
   {
     id: "signature",
     name: "Signature Collection",
-    description: "Our most iconic products that define the Aurelia aesthetic",
+    description: "Our most iconic products that define the Elixir DZ aesthetic",
     image: "/luxury-lipstick-rose-gold-tube-minimal-background.jpg",
     products: [1, 5, 10, 15], // Product IDs
     featured: true,
@@ -53,17 +53,17 @@ export const brandStory = {
   heritage: {
     title: "Our Heritage",
     content:
-      "Founded in the heart of luxury beauty, Aurelia represents the perfect fusion of timeless elegance and modern innovation. Our journey began with a simple belief: every woman deserves to feel extraordinary.",
+      "Elixir DZ brings you the finest Algerian beauty products, representing the perfect fusion of traditional beauty secrets and modern innovation. Our journey began with a simple belief: every woman deserves to feel extraordinary.",
     year: "2018",
   },
   philosophy: {
     title: "Our Philosophy",
     content:
-      "We believe beauty is not about perfection, but about confidence. Each Aurelia product is crafted to enhance your natural radiance while celebrating your unique beauty.",
+      "We believe beauty is not about perfection, but about confidence. Each Elixir DZ product is crafted to enhance your natural radiance while celebrating your unique beauty.",
   },
   craftsmanship: {
     title: "Artisan Craftsmanship",
     content:
-      "Every Aurelia product is meticulously formulated using the finest ingredients sourced globally. Our commitment to quality ensures each item meets the highest standards of luxury beauty.",
+      "Every Elixir DZ product is meticulously formulated using the finest ingredients sourced from Algeria and beyond. Our commitment to quality ensures each item meets the highest standards of luxury beauty.",
   },
 }

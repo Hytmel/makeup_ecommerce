@@ -6,11 +6,10 @@ import { ArrowLeft, Heart, ShoppingBag, Star } from "lucide-react"
 import { Button } from "../../../components/ui/button"
 import { Card, CardContent } from "../../../components/ui/card"
 import { Badge } from "../../../components/ui/badge"
-import { collections } from "../../../data/collections"
+import { collectionsDz } from "../../../data/collections_dz"
 import { products } from "../../../data/products"
 import Navbar from "../../../components/Navbar"
 import Footer from "../../../components/Footer"
-import { AuthProvider } from "../../../contexts/AuthContext"
 
 function CollectionDetailsContent() {
   const params = useParams()
@@ -21,27 +20,28 @@ function CollectionDetailsContent() {
   const [favorites, setFavorites] = useState([])
 
   useEffect(() => {
-    const foundCollection = collections.find((c) => c.id === params.id)
+    const foundCollection = collectionsDz.find((c) => c.id === params.id)
     setCollection(foundCollection)
 
     if (foundCollection) {
-      const collectionProductList = products.filter((product) => foundCollection.products.includes(product.id))
+      const ids = Array.isArray(foundCollection.productIds) ? foundCollection.productIds : []
+      const collectionProductList = products.filter((product) => ids.includes(product.id))
       setCollectionProducts(collectionProductList)
     }
 
-    const savedCart = localStorage.getItem("aurelia-cart")
-    const savedFavorites = localStorage.getItem("aurelia-favorites")
+    const savedCart = localStorage.getItem("elixirdz-cart")
+    const savedFavorites = localStorage.getItem("elixirdz-favorites")
 
     if (savedCart) setCartItems(JSON.parse(savedCart))
     if (savedFavorites) setFavorites(JSON.parse(savedFavorites))
   }, [params.id])
 
   useEffect(() => {
-    localStorage.setItem("aurelia-cart", JSON.stringify(cartItems))
+    localStorage.setItem("elixirdz-cart", JSON.stringify(cartItems))
   }, [cartItems])
 
   useEffect(() => {
-    localStorage.setItem("aurelia-favorites", JSON.stringify(favorites))
+    localStorage.setItem("elixirdz-favorites", JSON.stringify(favorites))
   }, [favorites])
 
   const addToCart = (product) => {
@@ -218,7 +218,7 @@ function CollectionDetailsContent() {
         <div>
           <h2 className="text-2xl font-serif font-bold text-foreground mb-8">Explore More Collections</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {collections
+            {collectionsDz
               .filter((c) => c.id !== collection.id && c.featured)
               .slice(0, 3)
               .map((relatedCollection) => (
@@ -254,9 +254,5 @@ function CollectionDetailsContent() {
 }
 
 export default function CollectionDetailsPage() {
-  return (
-    <AuthProvider>
-      <CollectionDetailsContent />
-    </AuthProvider>
-  )
+  return <CollectionDetailsContent />
 }

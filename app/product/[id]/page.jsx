@@ -29,8 +29,8 @@ function ProductDetailsContent() {
     const foundProduct = products.find((p) => p.id === productId)
     setProduct(foundProduct)
 
-    const savedCart = localStorage.getItem("aurelia-cart")
-    const savedFavorites = localStorage.getItem("aurelia-favorites")
+    const savedCart = localStorage.getItem("elixirdz-cart")
+    const savedFavorites = localStorage.getItem("elixirdz-favorites")
 
     if (savedCart) {
       setCartItems(JSON.parse(savedCart))
@@ -42,11 +42,11 @@ function ProductDetailsContent() {
 
   // Save to localStorage
   useEffect(() => {
-    localStorage.setItem("aurelia-cart", JSON.stringify(cartItems))
+    localStorage.setItem("elixirdz-cart", JSON.stringify(cartItems))
   }, [cartItems])
 
   useEffect(() => {
-    localStorage.setItem("aurelia-favorites", JSON.stringify(favorites))
+    localStorage.setItem("elixirdz-favorites", JSON.stringify(favorites))
   }, [favorites])
 
   const addToCart = (productToAdd, qty = 1) => {

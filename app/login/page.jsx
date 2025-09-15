@@ -48,7 +48,7 @@ export default function LoginPage() {
         <Card className="border-border/50">
           <CardHeader className="text-center space-y-2">
             <CardTitle className="text-3xl font-serif text-foreground">Welcome Back</CardTitle>
-            <p className="text-muted-foreground">Sign in to your Aurelia account</p>
+            <p className="text-muted-foreground">Sign in to your Elixir DZ account</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">

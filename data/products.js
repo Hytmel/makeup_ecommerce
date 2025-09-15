@@ -2,7 +2,7 @@ export const products = [
   // Lip Products
   {
     id: 1,
-    name: "Aurelia Luxury Lipstick",
+    name: "Elixir DZ Luxury Lipstick",
     price: 42,
     category: "lip",
     image: "/luxury-lipstick-rose-gold-tube-minimal-background.jpg",
