@@ -233,6 +233,43 @@ export const products = [
     rating: 5,
     description: "Nourishing lip treatment oil",
   },
+  // Bodycare & Healthcare (UI test data)
+  {
+    id: 26,
+    name: "Hydrating Body Lotion",
+    price: 44,
+    category: "bodycare",
+    image: "/luxury-moisturizer-jar-rose-gold-minimal-background.jpg",
+    rating: 5,
+    description: "Deeply hydrating body lotion for silky smooth skin",
+  },
+  {
+    id: 27,
+    name: "Revitalizing Body Wash",
+    price: 29,
+    category: "bodycare",
+    image: "/face-mist-spray-bottle-luxury-skincare-minimal.jpg",
+    rating: 4,
+    description: "Refreshing body wash with a luxurious lather",
+  },
+  {
+    id: 28,
+    name: "Nourishing Shampoo",
+    price: 19,
+    category: "haircare",
+    image: "/setting-spray-bottle-luxury-makeup-minimal-beige.jpg",
+    rating: 4,
+    description: "Gentle daily shampoo that cleanses without stripping moisture",
+  },
+  {
+    id: 29,
+    name: "Repairing Hair Mask",
+    price: 22,
+    category: "haircare",
+    image: "/eye-cream-tube-luxury-skincare-minimal-packaging.jpg",
+    rating: 5,
+    description: "Deep-conditioning mask to strengthen and smooth hair",
+  },
 ]
 
 export const categories = [
@@ -241,4 +278,6 @@ export const categories = [
   { id: "face", name: "Face Products" },
   { id: "eye", name: "Eye Products" },
   { id: "skincare", name: "Skincare" },
+  { id: "haircare", name: "Haircare" },
+  { id: "bodycare", name: "Bodycare" },
 ]
