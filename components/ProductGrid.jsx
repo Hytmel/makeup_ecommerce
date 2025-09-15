@@ -1,27 +1,36 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { Search } from "lucide-react"
+import { useState, useMemo, useEffect } from "react"
+import { Search, ArrowRight } from "lucide-react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import ProductCard from "./ProductCard"
 import { products, categories } from "../data/products"
+import { useRouter } from "next/navigation"
 
-export default function ProductGrid({ onAddToCart, onToggleFavorite, favorites }) {
+export default function ProductGrid({ onAddToCart, onToggleFavorite, favorites, isCompact = false, initialSearchTerm = "" }) {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("name")
+  const router = useRouter()
+
+  // Initialize search term if provided (used on /shop)
+  useEffect(() => {
+    if (initialSearchTerm) {
+      setSearchTerm(initialSearchTerm)
+    }
+  }, [initialSearchTerm])
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products
 
     // Filter by category
-    if (selectedCategory !== "all") {
+    if (!isCompact && selectedCategory !== "all") {
       filtered = filtered.filter((product) => product.category === selectedCategory)
     }
 
     // Filter by search term
-    if (searchTerm) {
+    if (!isCompact && searchTerm) {
       filtered = filtered.filter(
         (product) =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -30,21 +39,23 @@ export default function ProductGrid({ onAddToCart, onToggleFavorite, favorites }
     }
 
     // Sort products
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return a.price - b.price
-        case "price-high":
-          return b.price - a.price
-        case "rating":
-          return b.rating - a.rating
-        default:
-          return a.name.localeCompare(b.name)
-      }
-    })
+    if (!isCompact) {
+      filtered.sort((a, b) => {
+        switch (sortBy) {
+          case "price-low":
+            return a.price - b.price
+          case "price-high":
+            return b.price - a.price
+          case "rating":
+            return b.rating - a.rating
+          default:
+            return a.name.localeCompare(b.name)
+        }
+      })
+    }
 
-    return filtered
-  }, [selectedCategory, searchTerm, sortBy])
+    return isCompact ? filtered.slice(0, 8) : filtered
+  }, [isCompact, selectedCategory, searchTerm, sortBy])
 
   return (
     <section id="shop" className="py-20 bg-background">
@@ -57,53 +68,56 @@ export default function ProductGrid({ onAddToCart, onToggleFavorite, favorites }
           </p>
         </div>
 
-        {/* Filters and Search */}
-        <div className="mb-8 space-y-4">
-          {/* Search Bar */}
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-card border-border"
-            />
-          </div>
+        {/* Filters and Search (hidden in compact mode) */}
+        {!isCompact && (
+          <div className="mb-8 space-y-4">
+            {/* Top row: Centered Search and Sort */}
+            <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:justify-center">
+              <div className="relative w-full max-w-xl md:max-w-2xl">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-11 bg-card border-border rounded-full h-11 text-base"
+                />
+              </div>
 
-          {/* Category Filters */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category.id)}
-                className={
-                  selectedCategory === category.id
-                    ? "bg-primary text-primary-foreground"
-                    : "border-border hover:bg-card"
-                }
-              >
-                {category.name}
-              </Button>
-            ))}
-          </div>
+              <div className="w-full md:w-auto flex justify-center">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-2 border border-border rounded-md bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="name">Sort by Name</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                </select>
+              </div>
+            </div>
 
-          {/* Sort Options */}
-          <div className="flex justify-center">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-border rounded-md bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="name">Sort by Name</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
-            </select>
+            {/* Category Filters */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={
+                    selectedCategory === category.id
+                      ? "bg-primary text-primary-foreground"
+                      : "border-border hover:bg-card"
+                  }
+                >
+                  {category.name}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -119,9 +133,19 @@ export default function ProductGrid({ onAddToCart, onToggleFavorite, favorites }
         </div>
 
         {/* No Results */}
-        {filteredAndSortedProducts.length === 0 && (
+        {!isCompact && filteredAndSortedProducts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">No products found matching your criteria.</p>
+          </div>
+        )}
+
+        {/* See more button in compact mode */}
+        {isCompact && (
+          <div className="text-center mt-10">
+            <Button onClick={() => router.push('/shop')} variant="outline" size="lg">
+              See More
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
           </div>
         )}
       </div>

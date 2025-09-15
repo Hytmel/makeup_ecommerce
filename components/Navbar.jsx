@@ -5,13 +5,23 @@ import { Heart, ShoppingBag, Search, Menu, X, User } from "lucide-react"
 import { Button } from "./ui/button"
 import { useAuth } from "../contexts/AuthContext"
 import { useRouter } from "next/navigation"
-import SearchModal from "./SearchModal"
+import { Input } from "./ui/input"
 
 export default function Navbar({ cartCount, favoritesCount, onCartOpen, onFavoritesOpen }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false) // Added search modal state
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const { user } = useAuth()
   const router = useRouter()
+
+  const submitSearch = (e) => {
+    e.preventDefault()
+    const query = searchQuery.trim()
+    if (query.length > 0) {
+      router.push(`/shop?search=${encodeURIComponent(query)}`)
+      setIsSearchOpen(false)
+    }
+  }
 
   return (
     <>
@@ -76,11 +86,30 @@ export default function Navbar({ cartCount, favoritesCount, onCartOpen, onFavori
               </div>
             </div>
 
-            {/* Right side icons */}
+            {/* Right side: search + icons */}
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon" className="hidden sm:flex" onClick={() => setIsSearchOpen(true)}>
-                <Search className="h-5 w-5" />
-              </Button>
+              {/* Inline expanding search (desktop and mobile) */}
+              {isSearchOpen ? (
+                <form onSubmit={submitSearch} className="hidden sm:flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                    <Input
+                      autoFocus
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="pl-10 bg-card border-border w-64"
+                    />
+                  </div>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)}>
+                    <X className="h-5 w-5" />
+                  </Button>
+                </form>
+              ) : (
+                <Button variant="ghost" size="icon" className="hidden sm:flex" onClick={() => setIsSearchOpen(true)}>
+                  <Search className="h-5 w-5" />
+                </Button>
+              )}
 
               <Button variant="ghost" size="icon" className="relative" onClick={onFavoritesOpen}>
                 <Heart className="h-5 w-5" />
@@ -110,12 +139,36 @@ export default function Navbar({ cartCount, favoritesCount, onCartOpen, onFavori
                 {user && <span className="absolute -bottom-1 -right-1 bg-primary rounded-full h-2 w-2"></span>}
               </Button>
 
+              {/* Mobile: search icon toggles a row below header */}
+              <Button variant="ghost" size="icon" className="sm:hidden" onClick={() => setIsSearchOpen((v) => !v)}>
+                {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+              </Button>
+
               {/* Mobile menu button */}
               <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             </div>
           </div>
+
+          {/* Mobile inline search row */}
+          {isSearchOpen && (
+            <div className="sm:hidden pb-3">
+              <form onSubmit={submitSearch} className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    autoFocus
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search products..."
+                    className="pl-10 bg-card border-border"
+                  />
+                </div>
+                <Button type="submit" variant="outline">Search</Button>
+              </form>
+            </div>
+          )}
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
@@ -183,8 +236,6 @@ export default function Navbar({ cartCount, favoritesCount, onCartOpen, onFavori
           )}
         </div>
       </nav>
-
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   )
 }
